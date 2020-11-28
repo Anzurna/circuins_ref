@@ -26,70 +26,61 @@ MapRedactor::MapRedactor()
 	index=0;
 }
 
-void MapRedactor::EventListener(sf::Event &event,sf::RenderWindow& window, MapHandler& MapHndl,sf::Vector2i mousePos,sf::View view) {
-if (event.type == sf::Event::MouseButtonPressed && (event.mouseButton.button == sf::Mouse::Left)) {
+void MapRedactor::EventListener(sf::Event &event,sf::RenderWindow& window, MapHandler& MapHndl,sf::Vector2i mousePos,sf::View view)
+{
+	if (event.type == sf::Event::MouseButtonPressed) {
+		if (event.mouseButton.button == sf::Mouse::Left) {
 			this->SetRedact(window,MapHndl,mousePos,view);
 		}
-
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Left)) {
-          this->MoveRedact(MapHndl,-10.0f,0.0f);
-	}
-
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Up)) {
-         this->MoveRedact(MapHndl,0.0f,-10.0f);
-	}
-
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Down)) {
-          this->MoveRedact(MapHndl,0.0f,10.0f);
-	}
-
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Right)) {
-          this->MoveRedact(MapHndl,10.0f,0.0f);
-	}
-	//Создание новой точки
-	if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Q)) {
-			connect=false;
-			if (create==true) create=false; else create=true;
+		if (event.mouseButton.button == sf::Mouse::Left) { //прибавление точек к базису
+			if (create) this->SetVertex(window, MapHndl, 0, mousePos, {}, view);
+			else if (connect) this->SetConnectBasis(MapHndl, window, mousePos, view);
+			else if (drawconnect) this->DrawConnection(MapHndl, window, mousePos, view);
 		}
-    //Задание базиса соединения(точки)
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::U)) {
+	}
+	if (event.type == sf::Event::KeyPressed) {
+		if (event.key.code == sf::Keyboard::Left) {
+			this -> MoveRedact(MapHndl, -10.0f, 0.0f);
+		}
+		if ((event.key.code == sf::Keyboard::Up)) {
+        	this -> MoveRedact(MapHndl, 0.0f , -10.0f);
+		}
+		if (event.key.code == sf::Keyboard::Down) {
+       		this -> MoveRedact(MapHndl, 0.0f, 10.0f);
+		}
+		if (event.key.code == sf::Keyboard::Right) {
+        	this -> MoveRedact(MapHndl, 10.0f, 0.0f);
+		}
+		if (event.key.code == sf::Keyboard::Q) { //Создание новой точки
+			connect = false;
+			if (create) create = false; else create = true;
+		}
+		if (event.key.code == sf::Keyboard::U) { //Задание базиса соединения(точки)
 			create=false;
-			if (connect==true) connect=false; else connect=true;
+			if (connect) connect=false; else connect=true;
 		}
-		//прибавление точек к базису
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::B)) {
+		if (event.key.code == sf::Keyboard::B) {
 			create=false;
 			connect=false;
-			if	(drawconnect==false) drawconnect=true; else drawconnect=false;
-
+			if (!drawconnect) drawconnect=true; else drawconnect=false;
 		}
-
-		if (event.type == sf::Event::MouseButtonPressed && (event.mouseButton.button == sf::Mouse::Left)) {
-			if (create==true) this->SetVertex(window,MapHndl,0,mousePos,{},view);
-			else if (connect==true) this->SetConnectBasis(MapHndl,window,mousePos,view);
-			else if (drawconnect==true) this->DrawConnection(MapHndl,window,mousePos,view);
+		if (event.key.code == sf::Keyboard::T) {
+				this->Reset(MapHndl); //После передвижения пользователем какой то точки - принятие изменений и сброс свойств isMovable
 		}
-
-		//После передвижения пользователем какой то точки - принятие изменений и сброс свойств isMovable
-	if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::T)) {
-		this->Reset(MapHndl);
+		if (event.key.code == sf::Keyboard::Z) {
+			this->WriteFile(MapHndl,"C:\\SFMLprojects\\myproject\\content\\map.txt");
+		}
+		if (event.key.code == sf::Keyboard::Y) {
+			this->ReadFile(MapHndl,"C:\\SFMLprojects\\myproject\\content\\map.txt");
+		}
 	}
-
-		if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Z)) {
-		this->WriteFile(MapHndl,"C:\\SFMLprojects\\myproject\\content\\map.txt");
-	}
-
-	if (event.type == sf::Event::KeyPressed && (event.key.code == sf::Keyboard::Y)) {
-		this->ReadFile(MapHndl,"C:\\SFMLprojects\\myproject\\content\\map.txt");
-	}
-
 }
 //Задание точке свойства перемещаемости
 void MapRedactor::SetRedact(sf::RenderWindow& window, MapHandler& MapHndl,sf::Vector2i mousePos,sf::View view) {
 	for (unsigned int i=0; i<=MapHndl.allVertex.size();i++) {
-if (MapHndl.allVertex[i].checkIsClicked(window,mousePos,view)) {
-					MapHndl.allVertex[i].setIsMovable(true);
-					redactcount+=1; //Счетчик перемещаемых точек(должно быть не более одной)
+		if (MapHndl.allVertex[i].checkIsClicked(window,mousePos,view)) {
+			MapHndl.allVertex[i].setIsMovable(true);
+			redactcount+=1; //Счетчик перемещаемых точек(должно быть не более одной)
 				}
 	}
 }
@@ -98,7 +89,7 @@ void MapRedactor::Reset (MapHandler& MapHndl) {
 	redactcount=0;
 	concount=0;
 	setconn=false;
-	for (unsigned int i=0; i<=MapHndl.allVertex.size();i++) {
+	for (unsigned int i=0; i<= MapHndl.allVertex.size(); i++) {
 		MapHndl.allVertex[i].setIsMovable(false);
 		MapHndl.allVertex[i].setIsConnectable(false);
 	}
@@ -107,27 +98,25 @@ void MapRedactor::Reset (MapHandler& MapHndl) {
 
 //Задание базовой точки для соединения с другими вершинами
 void MapRedactor::SetConnectBasis (MapHandler& MapHndl,sf::RenderWindow& window,sf::Vector2i mousePos,sf::View view) {
-
 	for (unsigned int i=0; i<=MapHndl.allVertex.size();i++) {
-if (MapHndl.allVertex[i].checkIsClicked(window,mousePos,view)&&(concount<1)) {
-					concount+=1;
-					MapHndl.allVertex[i].setIsConnectable(true);//Добавление к точке свойства соединяемости
-					MapHndl.allVertex[i].Colorise();//Выделение цветом для визуализации
-					index=i;//Запоминаем индекс точки
-					break;
-
-				}
+		if (MapHndl.allVertex[i].checkIsClicked(window,mousePos,view)&&(concount<1)) {
+			concount+=1;
+			MapHndl.allVertex[i].setIsConnectable(true);//Добавление к точке свойства соединяемости
+			MapHndl.allVertex[i].Colorise();//Выделение цветом для визуализации
+			index=i;//Запоминаем индекс точки
+			break;
+		}
 	}
 }
 //Задание соединений с базовой точкой
 void MapRedactor::DrawConnection(MapHandler& MapHndl,sf::RenderWindow& window,sf::Vector2i mousePos,sf::View view) {
-	for (unsigned int i=0; i<=MapHndl.allVertex.size();i++) {
-if (MapHndl.allVertex[i].checkIsClicked(window,mousePos,view)&&(i!=index)) {
-	if (MapHndl.allVertex[index].checkIsConnectable()==true) {//Если точка доступна для соединения, то ..
-	MapHndl.allVertex[index].addConnection(i+1);//Взаимное добавление связи у двух точек
-	MapHndl.allVertex[i].addConnection(index+1);//
-	}
-}
+	for (unsigned int i=0; i <= MapHndl.allVertex.size(); i++) {
+		if (MapHndl.allVertex[i].checkIsClicked(window, mousePos, view) && (i != index)) {
+			if (MapHndl.allVertex[index].checkIsConnectable()) {//Если точка доступна для соединения, то ..
+				MapHndl.allVertex[index].addConnection(i+1);//Взаимное добавление связи у двух точек
+				MapHndl.allVertex[i].addConnection(index+1);//
+			}
+		}
 	}
 }
 
@@ -180,35 +169,30 @@ std::ifstream file (filename);
 
  if (!file)
  {
- std::cout << "Файл не открыт\n\n";
+ 	std::cout << "Файл не открыт\n\n";
  }
-
  else {
-	 while(getline(file, initStr)){ // пока не достигнут конец файла класть очередную строку в переменную  initStr
-	   std::stringstream(initStr)>>number>>xcord>>ycord;//запись первых трех параметров вертекса
-	   firstSpace=initStr.find_first_of("|")+1;
+	while(getline(file, initStr)) { // пока не достигнут конец файла класть очередную строку в переменную  initStr
+	   std::stringstream(initStr)>> number >> xcord >> ycord;//запись первых трех параметров вертекса
+	   firstSpace=initStr.find_first_of("|") + 1;
 	   secondSpace=initStr.length();
-	   connStr=initStr.substr(firstSpace,secondSpace-firstSpace);//образание первой части строки
+	   connStr=initStr.substr(firstSpace,secondSpace - firstSpace);//образание первой части строки
 	   std::istringstream is( connStr );
-      std::vector<std::string> tokens;
+       std::vector<std::string> tokens;
 	   std::copy( std::istream_iterator<std::string>( is ),
                std::istream_iterator<std::string>(),
                std::back_inserter( tokens ) ); //парсинг строки с пробелами
-			    for ( const auto &s : tokens ) {
-					std::stringstream(s)>>code;//перевод из строки в int
-					connectionCodes.push_back(code);//запись в массив соединений
-				}
+		for ( const auto &s : tokens ) {
+			std::stringstream(s)>>code;//перевод из строки в int
+			connectionCodes.push_back(code);//запись в массив соединений
+		}
 
-	   Vertex *Vertexobj = new Vertex; //cсздание вершины без параметров для инициализации
-	Vertexobj->init(number,{(int)xcord,(int)ycord},connectionCodes);
-	MapHndl.allVertex.push_back(*Vertexobj);
-	MapHndl.allVertex[MapHndl.allVertex.size()-1].init(number,{(int)xcord,(int)ycord},connectionCodes);
+	  	Vertex *Vertexobj = new Vertex; //cсздание вершины без параметров для инициализации
+		Vertexobj->init(number,{(int)xcord,(int)ycord},connectionCodes);
+		MapHndl.allVertex.push_back(*Vertexobj);
+		MapHndl.allVertex[MapHndl.allVertex.size()-1].init(number,{(int)xcord,(int)ycord},connectionCodes);
 		connectionCodes.clear();//очистка массива соединений
 		delete Vertexobj;//удаление указателя на вектор(вершину)
-
-
-    }
-
+   		}
  }
-
 }
