@@ -1,0 +1,20 @@
+# Build system
+bin
+build
+gmon.out
+*.stats
+Thumbs.db
+.DS_Store
+
+# VS Code
+.vscode/ipch
+.vscode
+.vscode/_keybindings.json
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/settings.json
+.vscode/tasks.json
+
+
+# Project specific
+#
