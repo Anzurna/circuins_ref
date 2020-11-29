@@ -2,16 +2,15 @@
 
 int main() {
 
-	MainMenu mainMenu(720, 1280 );
-
-	sf::RenderWindow window(sf::VideoMode(mainMenu.getWindowsWidth(), mainMenu.getWindowsHeight()), "Circuins",sf::Style::Close | sf::Style::Resize);
+	MainMenu mainMenu(720, 1280);
+	sf::RenderWindow window(sf::VideoMode(mainMenu.getWindowsWidth(), mainMenu.getWindowsHeight()),
+										  "Circuins", sf::Style::Close | sf::Style::Resize);
 
 	window.setFramerateLimit(60);
 
 #ifdef SFML_SYSTEM_WINDOWS
 	__windowsHelper.setIcon(window.getSystemHandle());
 #endif
-
 
 	sf::Event evnt;
 	GlobalContext glob;
@@ -20,18 +19,14 @@ int main() {
 	sp.playMusic("ZapTwoTone2");// вызов звука по названию
 	//sp.soundShoot();//вызов выстрела
 	while (window.isOpen()) {
-
 		while (window.pollEvent(evnt)) {
 
 			mainMenu.newWindowSize(evnt.size.width, evnt.size.height);
-
-
 
 			if (evnt.type == sf::Event::KeyPressed && evnt.key.code ==  sf::Keyboard::Escape)
 			{
 				mainMenu.disableSettingAndCreditsWindow();
 			}
-
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
@@ -87,16 +82,14 @@ int main() {
 						)
 					) */;
 
-		if(!glob.getIsGameStateActive())
-		{
-
-		window.clear();
-/* 		window.setView(sf::View(
-						sf::Vector2f(640, 360),
-						sf::Vector2f(1280, 720)
-						)); */
-		mainMenu.menuDraw(&window);
-		window.display();
+		if(!glob.getIsGameStateActive()) {
+			window.clear();
+	/* 		window.setView(sf::View(
+							sf::Vector2f(640, 360),
+							sf::Vector2f(1280, 720)
+							)); */
+			mainMenu.menuDraw(&window);
+			window.display();
 		}
 	}
 

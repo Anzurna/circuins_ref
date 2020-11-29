@@ -54,7 +54,6 @@ void Character::setHP(int amount)
 
 void Character::draw(sf::RenderWindow *window)
 {
-
 	hpBar.setSize(sf::Vector2f((this -> getHP()/5), 6));
 	hpBar.setPosition(this -> getPosX(), this -> getPosY()+60);
 

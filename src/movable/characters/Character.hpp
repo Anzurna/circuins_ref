@@ -1,7 +1,6 @@
 class Character : public Movable
 {
 	public:
-
 	virtual ~Character(){};
 	virtual void fire(std::list<Movable*>& allBullets, sf::Vector2i target);
 	virtual float getPosX();
@@ -23,6 +22,5 @@ class Character : public Movable
 	sf::RectangleShape hpBar;
 	float m_timer1;
 	bool flag = true;
-
 };
 

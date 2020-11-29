@@ -4,8 +4,6 @@ Bullet::Bullet ()
 	this -> m_shape.setTexture(&m_texture);
 	this -> m_shape.setSize({100.0f, 100.0f});
 	this -> m_maxRange = 600;
-
-
 }
 Bullet::Bullet (sf::Texture*, int team)
 {
@@ -15,9 +13,8 @@ Bullet::Bullet (sf::Texture*, int team)
 	this -> m_shape.setSize({60.0f, 15.0f});
 	this -> m_team = team;
 	this -> setType(1);
-		m_speed = 10;
+	m_speed = 10;
 	isHit = false;
-
 }
 
 void Bullet::setPosition(sf::Vector2f position)

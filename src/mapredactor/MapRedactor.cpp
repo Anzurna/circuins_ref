@@ -26,7 +26,7 @@ MapRedactor::MapRedactor()
 	index=0;
 }
 
-void MapRedactor::EventListener(sf::Event &event,sf::RenderWindow& window, MapHandler& MapHndl,sf::Vector2i mousePos,sf::View view)
+void MapRedactor::listenToEvents(sf::Event &event,sf::RenderWindow& window, MapHandler& MapHndl,sf::Vector2i mousePos,sf::View view)
 {
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {

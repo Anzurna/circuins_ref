@@ -1,5 +1,3 @@
-
-
 MapHandler::MapHandler()
 {
 	mapTile1.loadFromFile("content/MapTiles/entireMap.png");

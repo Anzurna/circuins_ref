@@ -6,8 +6,8 @@ class Pathfinder
 
 	public:
 	friend class Player;
-	Pathfinder(){};
+	Pathfinder(MapHandler&);
 	~Pathfinder(){};
 	std::vector<int> algorithmDijkstra(int start, int finish);
-	void init(MapHandler& MapHndl);
+	//void init(MapHandler& MapHndl);
 };

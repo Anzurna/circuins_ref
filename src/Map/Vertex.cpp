@@ -1,5 +1,3 @@
-
-
 void Vertex::init(int ID, cords self, std::vector<unsigned int> connectionVector)
 {
 	m_ID = ID;
@@ -27,11 +25,8 @@ bool Vertex::checkIsClicked(sf::RenderWindow& window, sf::Vector2i mousePos, sf:
 {
 	transformedMousePosition = window.mapPixelToCoords( {mousePos.x, mousePos.y} , view );
 	if (abs((mousePos.x) - (this -> transformedVertexPosition.x)) <= 60
-	&& abs((mousePos.y) - (this -> transformedVertexPosition.y)) <= 60) {
-
+		&& abs((mousePos.y) - (this -> transformedVertexPosition.y)) <= 60) {
 		this -> mouseIsOn = true;
-
-
 	} else {
 		this -> mouseIsOn = false;
 	}

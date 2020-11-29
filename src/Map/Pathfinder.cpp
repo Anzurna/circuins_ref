@@ -1,4 +1,4 @@
-void Pathfinder::init(MapHandler& MapHndl) {
+Pathfinder::Pathfinder(MapHandler& MapHndl) {
 	n = MapHndl.allVertex.size(); //размер динмаической матрицы весов - число вертексов на число вертексов
 	g = new int* [n];
 	for (int i = 0; i < n; i++)
@@ -15,10 +15,10 @@ void Pathfinder::init(MapHandler& MapHndl) {
 			for (unsigned int k = 0; k < MapHndl.allVertex[i].getConnectionCodesVectorSize(); k++) {
 				if (MapHndl.allVertex[j].getID() == MapHndl.allVertex[i].getConnectionCode(k)) {
 				//тогда между вершинами считается расстояние и помещается  в матрицу в i-ую строчку, j-ый столбец
-				int katet1 = pow((MapHndl.allVertex[j].getCordX()) - MapHndl.allVertex[i].getCordX(),2);
-				int katet2 = pow((MapHndl.allVertex[j].getCordY()) - MapHndl.allVertex[i].getCordY(),2);
-				int sqrr=sqrt(katet1+katet2);
-				g[i][j] = sqrr;
+					int katet1 = pow((MapHndl.allVertex[j].getCordX()) - MapHndl.allVertex[i].getCordX(),2);
+					int katet2 = pow((MapHndl.allVertex[j].getCordY()) - MapHndl.allVertex[i].getCordY(),2);
+					int sqrr=sqrt(katet1+katet2);
+					g[i][j] = sqrr;
 				}
 			}
 
@@ -69,6 +69,6 @@ std::vector<int> Pathfinder::algorithmDijkstra(int start, int finish){
 				v.push_back(u);
 			reverse(v.begin(), v.end());
 		}
-return v;
-	}
+	return v;
+}
 

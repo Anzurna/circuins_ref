@@ -8,8 +8,6 @@ class GameState {
 	void zoom(sf:: View& view, sf::Event& evnt);
 	//void drawScene(sf::RenderWindow& window);
 
-
-
 	private:
 
 	MapHandler mapHandl; //Создание карты
@@ -24,8 +22,15 @@ class GameState {
 	bool IsGameStateActive = false;
 	sf::View view;
 	sf::View parallaxView;
-	Pathfinder m_pathfinder;
+	Pathfinder m_pathfinder(MapHandler&);
 
-
-
+	// std::list<Movable*> allMovingObjects,
+	// 					iterToPlayer,
+	// 					drawingIter,
+	// 					collisionIter1,
+	// 					collisionIter2;
+	// std::list<Movable*>::iterator iterToPlayer;
+	// std::list<Movable*>::iterator drawingIter;
+	// std::list<Movable*>::iterator collisionIter1;
+	// std::list<Movable*>::iterator collisionIter2;
 };

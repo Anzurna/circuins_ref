@@ -20,12 +20,12 @@ void GameState::handle(sf::Event& evnt, sf::RenderWindow& window, /* sf::Vector2
 	sf::RectangleShape test(sf::Vector2f(40.0f, 40.0f));
 	MapRedactor mp;
 	mp.ReadFile(mapHandl, ".\\content\\map.txt");
-	m_pathfinder.init(mapHandl);
+	Pathfinder m_pathfinder(mapHandl);
 	std::list<Movable*> allMovingObjects;
 	std::list<Movable*>::iterator iterToPlayer;
 	std::list<Movable*>::iterator drawingIter;
-	std::list<Movable*>::iterator collideIter1;
-	std::list<Movable*>::iterator collideIter2;
+	std::list<Movable*>::iterator collisionIter1;
+	std::list<Movable*>::iterator collisionIter2;
 	sf::Texture testTexture;
 	testTexture.loadFromFile("content/CharSprites/enemy1.png");
 
@@ -82,7 +82,7 @@ void GameState::handle(sf::Event& evnt, sf::RenderWindow& window, /* sf::Vector2
 		enemies[n].setHasKey();
 	}
 	for (int a = 0; a < 9; a++) {
-		enemies.push_back(Enemy(8953.0f+40*a, 9300.0f, testTexture));
+		enemies.push_back(Enemy(8953.0f+40 * a, 9300.0f, testTexture));
 		//enemies[a].setPosition(8953.0f, 9300.0f);
 		enemies[a].setID((a + (rand())%13 + 1));
 		enemies[a].setHP(500);
@@ -120,10 +120,9 @@ void GameState::handle(sf::Event& evnt, sf::RenderWindow& window, /* sf::Vector2
 				this -> zoom(view, evnt);
 			}
 
-
 			//Place event listeners here
-			if (mapRed==true) {
-				mapRedct.EventListener(evnt,window,mapHandl,mousePos1,view);
+			if (mapRed) {
+				mapRedct.listenToEvents(evnt, window, mapHandl, mousePos1, view);
 			}
 			mainPlayer.eventListener(evnt, window, mapHandl, mousePos1, view, m_pathfinder);
 			//eventListener(evnt, window, mapHandl, mousePos1, view, m_pathfinder);
@@ -152,16 +151,11 @@ void GameState::handle(sf::Event& evnt, sf::RenderWindow& window, /* sf::Vector2
 				toggleCentering = (toggleCentering ? false : true);
 
 			}
-
 					//Нажать backspace чтобы вызвать редактор карты
 		 	if (evnt.type==sf::Event::KeyPressed && evnt.key.code == sf::Keyboard::Backspace) {
 			 	if (mapRed==false) mapRed=true; else mapRed=false;
 			}
-
-
 		}
-
-
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 			if (Time3 > 0.1) {
 				sf::Vector2i transformedMousePosition;
@@ -177,9 +171,7 @@ void GameState::handle(sf::Event& evnt, sf::RenderWindow& window, /* sf::Vector2
 			mainPlayer.destroyKeys();
 			mainPlayer.setPosition(6000, 6000);
 			mainPlayer.setHP(500);
-
 		}
-
 
 		if (mousePos1.x > m_width - 20) { // Перемещение видов, позже бует вынесено в отдельный объект
 			view.move(25.0f, 0.0f);
@@ -199,25 +191,25 @@ void GameState::handle(sf::Event& evnt, sf::RenderWindow& window, /* sf::Vector2
 		}
 
 
-		for (collideIter1 = allMovingObjects.begin(); collideIter1 != allMovingObjects.end(); ++collideIter1) {
-			for (collideIter2 = allMovingObjects.begin(); collideIter2 != allMovingObjects.end(); ++collideIter2) {
-				if ((abs((**collideIter1).getPosition().x - ((**collideIter2).getPosition().x)) < 50) &&
-					abs((**collideIter1).getPosition().y - ((**collideIter2).getPosition().y)) < 50) {
-					if ((**collideIter1).getTeam() != (**collideIter2).getTeam()) {
-						if ((**collideIter2).getType() == 1 && ((**collideIter1).getType() != (1 || 3))) {
-							(**collideIter1).changeHP(-50);
-							(**collideIter2).Movable::~Movable();
-							allMovingObjects.erase(collideIter2--);
+		for (collisionIter1 = allMovingObjects.begin(); collisionIter1 != allMovingObjects.end(); ++collisionIter1) {
+			for (collisionIter2 = allMovingObjects.begin(); collisionIter2 != allMovingObjects.end(); ++collisionIter2) {
+				if ((abs((**collisionIter1).getPosition().x - ((**collisionIter2).getPosition().x)) < 50) &&
+					abs((**collisionIter1).getPosition().y - ((**collisionIter2).getPosition().y)) < 50) {
+					if ((**collisionIter1).getTeam() != (**collisionIter2).getTeam()) {
+						if ((**collisionIter2).getType() == 1 && ((**collisionIter1).getType() != (1 || 3))) {
+							(**collisionIter1).changeHP(-50);
+							(**collisionIter2).Movable::~Movable();
+							allMovingObjects.erase(collisionIter2--);
 						}
 					}
-					if ((**collideIter1).getType() == 0 && ((**collideIter2).getType() == 3 )) {
+					if ((**collisionIter1).getType() == 0 && ((**collisionIter2).getType() == 3 )) {
 						mainPlayer.addKey();
-						(**collideIter2).Movable::~Movable();
-						allMovingObjects.erase(collideIter2--);
+						(**collisionIter2).Movable::~Movable();
+						allMovingObjects.erase(collisionIter2--);
 					}
-/* 				if ((**collideIter1).getType() == 2 && ((**collideIter1).getHP() <= 0)) {
-					(**collideIter1).Movable::~Movable();
-					allMovingObjects.erase(collideIter1--);
+/* 				if ((**collisionIter1).getType() == 2 && ((**collisionIter1).getHP() <= 0)) {
+					(**collisionIter1).Movable::~Movable();
+					allMovingObjects.erase(collisionIter1--);
 				} */
 
 

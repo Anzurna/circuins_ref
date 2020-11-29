@@ -11,15 +11,12 @@ Movable::MovementData Movable::calculateSpeedAndRotation(sf::Vector2i target, sf
 
 			float degrees = atan2(xLength, -yLength) *(180/M_PI) - 90;
 
-
 			this ->  m_movementData.speed.x = speedToNextPointX;
 			this ->  m_movementData.speed.y = speedToNextPointY;
 			this ->  m_movementData.degrees = degrees;
 
 			std::cout << "tx " << target.x << "ty " << target.y << std::endl;
 			return m_movementData;
-
-
 }
 void Movable::setPosition(float x, float y)
 {
