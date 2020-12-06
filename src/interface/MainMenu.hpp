@@ -18,6 +18,8 @@ class MainMenu
 	Background background;
 	Slider slider;
 	std::fstream VolumeFile;
+
+public:
 	MainMenu(int WH, int WW);
 	int getWindowsHeight();
 	int getWindowsWidth();
@@ -29,6 +31,7 @@ class MainMenu
 	void newValueVolume(int X);
 	void newElementPosition(int X, int Y);
 	void menuDraw(sf::RenderWindow *window);
+	void ListenToEvents(yag::EngineData&, const sf::Vector2i&);
 };
 
 

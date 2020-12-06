@@ -29,7 +29,6 @@ int MainMenu::getWindowsWidth()
 {
 	return WINDOWS_WIDTH;
 }
-
 void MainMenu::newWindowSize(int X, int Y)
 {
 	exit.setWindowSize(X, Y);
@@ -74,11 +73,11 @@ void MainMenu::menuDraw(sf::RenderWindow *window)
 	background.drawBackground(window);
 	if (!settingWindow.getSettingEnabled() && !creditsWindow.getCreditsEnabled())
 	{
-	exit.drawButton(window);
-	setting.drawButton(window);
-	credits.drawButton(window);
-	play.drawButton(window);
-	name.drawName(window);
+		exit.drawButton(window);
+		setting.drawButton(window);
+		credits.drawButton(window);
+		play.drawButton(window);
+		name.drawName(window);
 	}
 	if (settingWindow.getSettingEnabled())
 	{
@@ -89,7 +88,40 @@ void MainMenu::menuDraw(sf::RenderWindow *window)
 	{
 		creditsWindow.drawCredits(window);
 	}
-
+}
+void MainMenu::ListenToEvents(yag::EngineData& engine_data, const sf::Vector2f& mouse_position)
+{
+	this -> newWindowSize(engine_data.GetGameEvent().size.width,
+			 								  engine_data.GetGameEvent().size.height);
+	if (engine_data.GetGameEvent().type == sf::Event::KeyPressed &&
+			engine_data.GetGameEvent().key.code ==  sf::Keyboard::Escape) {
+			this -> disableSettingAndCreditsWindow();
+	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		if (!this -> settingWindow.getSettingEnabled() && !this -> creditsWindow.getCreditsEnabled())	{
+				if (this -> exit.isPressed(mouse_position.x, mouse_position.y)) {
+						return 1;
+					}
+					if (this -> credits.isPressed(mouse_position.x, mouse_position.y)) {
+						this -> enableCredits();
+					}
+					if (this -> setting.isPressed(mouse_position.x, mouse_position.y)) {
+						this -> enableSetting();
+					}
+					if (this -> play.isPressed(mouse_position.x, mouse_position.y)) {
+						GameState newGameState(1280, 720);
+						glob.setGameStateActive(true);
+						if (glob.getIsGameStateActive()){
+							newGameState.handle(engine_data.GetGameEvent(), engine_data.GetGameWindow(), glob);
+						}
+					}
+				}
+				if (this -> settingWindow.getSettingEnabled())
+				{
+					if (this -> slider.isPressed(mouse_position.x, mouse_position.y))
+					{
+						this -> newValueVolume(mouse_position.x);
+					}
 }
 
 
