@@ -79,6 +79,7 @@ struct speedAndRotation {
 		float degrees;
 	};
 #include "GlobalContext.hpp"
+#include "engine/engine_data.h"
 #include "interface/Button.hpp"
 #include "interface/Name.hpp"
 #include "interface/Background.hpp"

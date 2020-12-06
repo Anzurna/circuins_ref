@@ -3,33 +3,33 @@
 int main() {
 
 	MainMenu mainMenu(720, 1280);
-	sf::RenderWindow window(sf::VideoMode(mainMenu.getWindowsWidth(), mainMenu.getWindowsHeight()),
-										  "Circuins", sf::Style::Close | sf::Style::Resize);
+	yag::EngineData engine_data;
 
-	window.setFramerateLimit(60);
+	engine_data.GetGameWindow().setFramerateLimit(60);
 
-#ifdef SFML_SYSTEM_WINDOWS
-	__windowsHelper.setIcon(window.getSystemHandle());
-#endif
+	#ifdef SFML_SYSTEM_WINDOWS
+		__windowsHelper.setIcon(engine_data.GetGameWindow().getSystemHandle());
+	#endif
 
-	sf::Event evnt;
-	GlobalContext glob;
+	static GlobalContext glob;
 	SoundProducer sp;
 	sp.setVolume(glob);//установка значения звука
 	sp.playMusic("ZapTwoTone2");// вызов звука по названию
 	//sp.soundShoot();//вызов выстрела
-	while (window.isOpen()) {
-		while (window.pollEvent(evnt)) {
+	while (engine_data.GetGameWindow().isOpen()) {
+		while (engine_data.GetGameWindow().pollEvent(engine_data.GetGameEvent())) {
 
-			mainMenu.newWindowSize(evnt.size.width, evnt.size.height);
+			mainMenu.newWindowSize(engine_data.GetGameEvent().size.width,
+			 											 engine_data.GetGameEvent().size.height);
 
-			if (evnt.type == sf::Event::KeyPressed && evnt.key.code ==  sf::Keyboard::Escape)
+			if (engine_data.GetGameEvent().type == sf::Event::KeyPressed &&
+					engine_data.GetGameEvent().key.code ==  sf::Keyboard::Escape)
 			{
 				mainMenu.disableSettingAndCreditsWindow();
 			}
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
-				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+				sf::Vector2i mousePos = sf::Mouse::getPosition(engine_data.GetGameWindow());
 				if (!mainMenu.settingWindow.getSettingEnabled() && !mainMenu.creditsWindow.getCreditsEnabled())
 				{
 					if (mainMenu.exit.isPressed(mousePos.x, mousePos.y))
@@ -43,7 +43,6 @@ int main() {
 					if (mainMenu.setting.isPressed(mousePos.x, mousePos.y))
 					{
 						mainMenu.enableSetting();
-
 					}
 					if (mainMenu.play.isPressed(mousePos.x, mousePos.y))
 					{
@@ -51,7 +50,7 @@ int main() {
 						glob.setGameStateActive(true);
 							if (glob.getIsGameStateActive())
 							{
-								newGameState.handle(evnt, window,  glob);
+								newGameState.handle(engine_data.GetGameEvent(), engine_data.GetGameWindow(), glob);
 							}
 					}
 				}
@@ -64,9 +63,9 @@ int main() {
 				}
 			}
 
-		switch (evnt.type) {
+		switch (engine_data.GetGameEvent().type) {
 				case sf::Event::Closed:
-					window.close();
+					engine_data.GetGameWindow().close();
 					break;
 				case sf::Event::Resized:
 					mainMenu.newElementPosition(1280, 720);
@@ -83,16 +82,15 @@ int main() {
 					) */;
 
 		if(!glob.getIsGameStateActive()) {
-			window.clear();
+			engine_data.GetGameWindow().clear();
 	/* 		window.setView(sf::View(
 							sf::Vector2f(640, 360),
 							sf::Vector2f(1280, 720)
 							)); */
-			mainMenu.menuDraw(&window);
-			window.display();
+			mainMenu.menuDraw(&engine_data.GetGameWindow());
+			engine_data.GetGameWindow().display();
 		}
 	}
-
 	return 0;
 }
 

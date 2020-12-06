@@ -1,5 +1,4 @@
 GlobalContext::GlobalContext()
+	: volume_(100.0f), is_gamestate_active_(false)
 {
-	volume = 100.0f;
-	IsGameStateActive = false;
 }
